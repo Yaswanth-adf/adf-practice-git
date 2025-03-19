@@ -1,0 +1,170 @@
+{
+	"name": "Copy Activity with Parameters",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copyingdat",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": "TRUNCATE TABLE Cust_info_V1",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": {
+							"value": "@{pipeline().parameters.pl_tblname}",
+							"type": "Expression"
+						},
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_blob2adf",
+						"type": "DatasetReference",
+						"parameters": {
+							"DS_FileName": "1"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_adf2sqldb",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_dbname": {
+								"value": "@pipeline().parameters.pl_dbname",
+								"type": "Expression"
+							},
+							"ds_username": {
+								"value": "@pipeline().parameters.pl_dbusername",
+								"type": "Expression"
+							},
+							"ds_tblname": {
+								"value": "@pipeline().parameters.pl_tblname",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Stored procedure1",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Copyingdat",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[USP_load_pipeline_Variables]",
+					"storedProcedureParameters": {
+						"Adf_name": {
+							"value": {
+								"value": "@pipeline().DataFactory",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"pl_name": {
+							"value": {
+								"value": "@pipeline().Pipeline",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Pl_Startdate": {
+							"value": {
+								"value": "@pipeline().TriggerTime",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"pl_triggername": {
+							"value": {
+								"value": "@pipeline().TriggerName",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"pl_runid": {
+							"value": {
+								"value": "@pipeline()?.TriggeredByPipelineRunId",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_adf2sqldb",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"ls_dbname": {
+							"value": "@pipeline().parameters.pl_dbname",
+							"type": "Expression"
+						},
+						"ls_username": {
+							"value": "@pipeline().parameters.pl_dbusername",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"pl_dbname": {
+				"type": "string"
+			},
+			"pl_dbusername": {
+				"type": "string"
+			},
+			"pl_tblname": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-03-19T00:55:18Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

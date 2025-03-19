@@ -1,0 +1,32 @@
+{
+	"name": "ds_blob_outputfolder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sink_blob",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ds_param_folders": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": {
+					"value": "@dataset().ds_param_folders",
+					"type": "Expression"
+				},
+				"container": "prestagecontainer"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,142 @@
+{
+	"name": "Ds_sqlDbConnects",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sqlDbConnects",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "CustomerKey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "GeographyKey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CustomerAlternateKey",
+				"type": "varchar"
+			},
+			{
+				"name": "Title",
+				"type": "varchar"
+			},
+			{
+				"name": "FirstName",
+				"type": "varchar"
+			},
+			{
+				"name": "MiddleName",
+				"type": "varchar"
+			},
+			{
+				"name": "LastName",
+				"type": "varchar"
+			},
+			{
+				"name": "NameStyle",
+				"type": "varchar"
+			},
+			{
+				"name": "BirthDate",
+				"type": "date"
+			},
+			{
+				"name": "MaritalStatus",
+				"type": "varchar"
+			},
+			{
+				"name": "Suffix",
+				"type": "varchar"
+			},
+			{
+				"name": "Gender",
+				"type": "varchar"
+			},
+			{
+				"name": "EmailAddress",
+				"type": "varchar"
+			},
+			{
+				"name": "YearlyIncome",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "TotalChildren",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "NumberChildrenAtHome",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "EnglishEducation",
+				"type": "varchar"
+			},
+			{
+				"name": "SpanishEducation",
+				"type": "varchar"
+			},
+			{
+				"name": "FrenchEducation",
+				"type": "varchar"
+			},
+			{
+				"name": "EnglishOccupation",
+				"type": "varchar"
+			},
+			{
+				"name": "SpanishOccupation",
+				"type": "varchar"
+			},
+			{
+				"name": "FrenchOccupation",
+				"type": "varchar"
+			},
+			{
+				"name": "HouseOwnerFlag",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "NumberCarsOwned",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "AddressLine1",
+				"type": "varchar"
+			},
+			{
+				"name": "AddressLine2",
+				"type": "varchar"
+			},
+			{
+				"name": "Phone",
+				"type": "varchar"
+			},
+			{
+				"name": "DateFirstPurchase",
+				"type": "date"
+			},
+			{
+				"name": "CommuteDistance",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "EMPLOYEE"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,54 @@
+{
+	"name": "Df_DerivedColumn",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Ds_sqlDbConnects",
+						"type": "DatasetReference"
+					},
+					"name": "sourceEmployeeTbl"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Ds_Sql_DerivedCol",
+						"type": "DatasetReference"
+					},
+					"name": "sinkforderivedcolumnfields"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Emp_ID as integer,",
+				"          Emp_Name as string,",
+				"          SAL as decimal(19,4),",
+				"          EMP_DEPT as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> sourceEmployeeTbl",
+				"sourceEmployeeTbl derive(EmpId_Name_Combo = concat(toString( Emp_ID),'-',Emp_Name)) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkforderivedcolumnfields"
+			]
+		}
+	}
+}

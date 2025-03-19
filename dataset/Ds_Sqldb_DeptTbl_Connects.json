@@ -1,0 +1,31 @@
+{
+	"name": "Ds_Sqldb_DeptTbl_Connects",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sqlDbConnects",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DEPT_ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DEPT_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "DEPT_Category",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DEPT"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

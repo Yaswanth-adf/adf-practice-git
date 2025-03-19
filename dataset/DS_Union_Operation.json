@@ -1,0 +1,17 @@
+{
+	"name": "DS_Union_Operation",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sqlDbConnects",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Employee_Emp_Union"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

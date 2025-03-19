@@ -1,0 +1,24 @@
+{
+	"name": "ds_inputfolder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_bs2adf",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Customerdetails_100.csv",
+				"container": "sourcecontainer"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

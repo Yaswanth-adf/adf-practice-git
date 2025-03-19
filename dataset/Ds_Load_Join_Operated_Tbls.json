@@ -1,0 +1,17 @@
+{
+	"name": "Ds_Load_Join_Operated_Tbls",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sqlDbConnects",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Df_JoinOperation"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

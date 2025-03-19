@@ -1,0 +1,87 @@
+{
+	"name": "Df_Join_Operation",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Ds_sqlDbConnects",
+						"type": "DatasetReference"
+					},
+					"name": "ConnecttoEmptbl"
+				},
+				{
+					"dataset": {
+						"referenceName": "Ds_Sqldb_DeptTbl_Connects",
+						"type": "DatasetReference"
+					},
+					"name": "ConnectstoDepttbl"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Ds_Load_Join_Operated_Tbls",
+						"type": "DatasetReference"
+					},
+					"name": "sink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "joinoperation"
+				},
+				{
+					"name": "selectcolumnsfromlist"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Emp_ID as integer,",
+				"          Emp_Name as string,",
+				"          SAL as decimal(19,4),",
+				"          EMP_DEPT as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> ConnecttoEmptbl",
+				"source(output(",
+				"          DEPT_ID as integer,",
+				"          DEPT_NAME as string,",
+				"          DEPT_Category as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> ConnectstoDepttbl",
+				"ConnecttoEmptbl, ConnectstoDepttbl join(EMP_DEPT == DEPT_ID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> joinoperation",
+				"joinoperation select(mapColumn(",
+				"          EmpID = Emp_ID,",
+				"          EmpName = Emp_Name,",
+				"          SAL,",
+				"          EMPDEPT = EMP_DEPT,",
+				"          DEPTNAME = DEPT_NAME,",
+				"          DEPTCategory = DEPT_Category",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectcolumnsfromlist",
+				"selectcolumnsfromlist sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink"
+			]
+		}
+	}
+}

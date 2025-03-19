@@ -1,0 +1,38 @@
+{
+	"name": "Ds_Emp1_Tbl",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sqlDbConnects",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "EMP_ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "EMP_NAME",
+				"type": "varchar"
+			},
+			{
+				"name": "SAL",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "EMP_DEPT",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "EMP_1"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

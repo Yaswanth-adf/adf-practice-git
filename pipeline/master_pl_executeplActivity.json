@@ -1,0 +1,52 @@
+{
+	"name": "master_pl_executeplActivity",
+	"properties": {
+		"description": "Execute a pipeline within another pipeline",
+		"activities": [
+			{
+				"name": "Execute pl activity",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy Activity with Parameters",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"pl_dbname": {
+							"value": "@pipeline().parameters.param_dbname",
+							"type": "Expression"
+						},
+						"pl_dbusername": {
+							"value": "@pipeline().parameters.param_username",
+							"type": "Expression"
+						},
+						"pl_tblname": {
+							"value": "@pipeline().parameters.param_tblname",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"param_dbname": {
+				"type": "string"
+			},
+			"param_username": {
+				"type": "string"
+			},
+			"param_tblname": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-02-24T16:49:56Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

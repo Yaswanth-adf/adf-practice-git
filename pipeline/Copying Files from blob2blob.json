@@ -1,0 +1,131 @@
+{
+	"name": "Copying Files from blob2blob",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Activity to blob",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "sourcecontainer//Customerdetails_100.csv"
+					},
+					{
+						"name": "Destination",
+						"value": "stagecontainer//"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "ls_sink_blob",
+							"type": "LinkedServiceReference"
+						},
+						"path": "prestagecontainer"
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_blob2adf",
+						"type": "DatasetReference",
+						"parameters": {
+							"DS_FileName": "1"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sink_blob",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Delete folder in blob",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Copy Activity to blob",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Deleteing a Blob container",
+						"value": "Deleting files from blob container"
+					}
+				],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_sink_blob",
+						"type": "DatasetReference"
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "ls_sink_blob",
+							"type": "LinkedServiceReference"
+						},
+						"path": "stagecontainer"
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-03-09T04:34:57Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

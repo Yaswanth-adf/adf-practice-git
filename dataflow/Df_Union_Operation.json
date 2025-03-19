@@ -1,0 +1,71 @@
+{
+	"name": "Df_Union_Operation",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Ds_sqlDbConnects",
+						"type": "DatasetReference"
+					},
+					"name": "EmployeeTbl"
+				},
+				{
+					"dataset": {
+						"referenceName": "Ds_Emp1_Tbl",
+						"type": "DatasetReference"
+					},
+					"name": "Emp1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Union_Operation",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "UnionOperation"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Emp_ID as integer,",
+				"          Emp_Name as string,",
+				"          SAL as decimal(19,4),",
+				"          EMP_DEPT as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> EmployeeTbl",
+				"source(output(",
+				"          EMP_ID as integer,",
+				"          EMP_NAME as string,",
+				"          SAL as decimal(19,4),",
+				"          EMP_DEPT as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> Emp1",
+				"EmployeeTbl, Emp1 union(byName: false)~> UnionOperation",
+				"UnionOperation sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

@@ -1,0 +1,96 @@
+{
+	"name": "Pl_Lookup_withStoredProc",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup for  Tbl data retrieval",
+				"description": "Retrieving the customer info from Table where children's have 4 or more",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT  CustomerKey FROM [dbo].[Cust_info_V1]\nWHERE Totalchildren>=4\n",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "Ds_sqlDbConnects",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach Activity",
+				"description": "Loping Each record for Updating Customer Info Data from input lookup Stream",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup for  Tbl data retrieval",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup for  Tbl data retrieval').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Lookup using Stored Proc",
+							"description": "Updating records in Tbl using Stored Proc",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderStoredProcedureName": "[dbo].[USP_Update_CustNames]",
+									"storedProcedureParameters": {
+										"Cust_Key": {
+											"type": "Int64",
+											"value": {
+												"value": "@string(item().CustomerKey)",
+												"type": "Expression"
+											}
+										}
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "Ds_sqlDbConnects",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						}
+					]
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-03-12T16:00:32Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

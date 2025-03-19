@@ -1,0 +1,40 @@
+{
+	"name": "ds_adf2sqldb",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adf2sqldb",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"ls_dbname": {
+					"value": "@dataset().ds_dbname",
+					"type": "Expression"
+				},
+				"ls_username": {
+					"value": "@dataset().ds_username",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"ds_dbname": {
+				"type": "string"
+			},
+			"ds_username": {
+				"type": "string"
+			},
+			"ds_tblname": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"table": {
+				"value": "@dataset().ds_tblname",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

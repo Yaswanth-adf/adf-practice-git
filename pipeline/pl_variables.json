@@ -1,0 +1,86 @@
+{
+	"name": "pl_variables",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_blob2adf",
+						"type": "DatasetReference",
+						"parameters": {
+							"DS_FileName": {
+								"value": "@string(pipeline().parameters.param_filename)",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"structure"
+					],
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "FileStructure",
+					"value": {
+						"value": "@activity('Get Metadata1').output.structure",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"param_filename": {
+				"type": "array"
+			}
+		},
+		"variables": {
+			"number_of_containers": {
+				"type": "String"
+			},
+			"Count of Items": {
+				"type": "Integer"
+			},
+			"FileStructure": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-03-09T18:39:35Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
